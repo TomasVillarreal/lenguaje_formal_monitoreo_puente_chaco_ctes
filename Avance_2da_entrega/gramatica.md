@@ -69,15 +69,4 @@
                    | "critica"
 ```
 
-## Justificación de Diseño y Propiedad LL(1)
-
-### Análisis de la producción `<Respuesta>`
-
-La producción `<Respuesta>` se define de la siguiente manera:
-```bnf
-<Respuesta> ::= <ReporteAlerta>
-              | <AccionRespuesta>
-              | <ListaAlertas> <AccionRespuesta>
-              | <AccionRespuesta> <ListaAlertas>
-```
 
