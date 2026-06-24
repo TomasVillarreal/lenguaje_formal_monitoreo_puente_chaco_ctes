@@ -17,7 +17,6 @@
 <Respuesta> ::= <ReporteAlerta>
               | <AccionRespuesta>
               | <ListaAlertas> <AccionRespuesta>
-              | <AccionRespuesta> <ListaAlertas>
 
 <AccionRespuesta> ::= "ACCION" <ListaAcciones>
 
@@ -68,5 +67,3 @@
                    | "alta"
                    | "critica"
 ```
-
-
