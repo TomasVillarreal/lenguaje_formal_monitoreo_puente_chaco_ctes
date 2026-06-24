@@ -89,7 +89,7 @@ La producción tiene 2 alternativas (una de ellas es $\lambda$):
 
 Para gramáticas con transiciones $\lambda$, debemos verificar que el conjunto `FIRST` de la alternativa no vacía no colisione con el conjunto `FOLLOW` de la producción principal:
 
-$$\text{Intersección: } FIRST(<AccionRespuesta>) \cap FOLLOW(<OpcionalAccionRespuesta>) = \{ \text{ACCION} \} \cap \{ \text{PUNTO\_COMA} \} = \emptyset$$
+$$\text{Intersección: } FIRST(<AccionRespuesta>) \cap FOLLOW(<OpcionalAccionRespuesta>) = \{ \text{ACCION} \} \cap \{ \text{PUNTO\COMA} \} = \emptyset$$
 
 No hay conflicto First/Follow.
 
@@ -98,7 +98,7 @@ De igual manera:
 *   **Alt 1**: `<ListaAlertas>` $\rightarrow FIRST = \{ \text{ALERTA} \}$
 *   **Alt 2**: $\lambda$ $\rightarrow FIRST = \{ \lambda \}$
 
-$$\text{Intersección: } FIRST(<ListaAlertas>) \cap FOLLOW(<OpcionalListaAlertas>) = \{ \text{ALERTA} \} \cap \{ \text{PUNTO\_COMA} \} = \emptyset$$
+$$\text{Intersección: } FIRST(<ListaAlertas>) \cap FOLLOW(<OpcionalListaAlertas>) = \{ \text{ALERTA} \} \cap \{ \text{PUNTO\COMA} \} = \emptyset$$
 
 No hay conflicto First/Follow.
 
