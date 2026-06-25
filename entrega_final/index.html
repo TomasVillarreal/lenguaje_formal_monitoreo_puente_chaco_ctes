@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consola de Operaciones - Puente General Belgrano</title>
+  
+  <!-- Tipografías de Grado Profesional -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0a0b10;
+      --bg-card: rgba(17, 19, 28, 0.75);
+      --border-color: rgba(255, 255, 255, 0.06);
+      --text-main: #f3f4f6;
+      --text-muted: #7f8699;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --primary-glow: rgba(79, 70, 229, 0.25);
+      --accent-red: #ef4444;
+      --accent-blue: #3b82f6;
+      --accent-green: #10b981;
+      --accent-yellow: #f59e0b;
+      --font-main: 'Outfit', sans-serif;
+      --font-mono: 'Fira Code', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(79, 70, 229, 0.12) 0px, transparent 40%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.08) 0px, transparent 40%);
+    }
+
+    /* Cabecera Corporativa */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 18px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, var(--primary), var(--accent-blue));
+      color: white;
+      font-weight: 700;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+      box-shadow: 0 4px 20px rgba(79, 70, 229, 0.3);
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      color: var(--text-main);
+    }
+
+    .subtitle {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+      letter-spacing: 0.3px;
+    }
+
+    .header-metadata {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    .header-metadata strong {
+      color: var(--text-main);
+    }
+
+    /* Contenedor Principal */
+    .grid-container {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      flex-grow: 1;
+    }
+
+    /* Paneles de Control (Glassmorphism Profesional) */
+    .panel {
+      background: var(--bg-card);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .panel:hover {
+      border-color: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.45);
+    }
+
+    .panel-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      padding-bottom: 10px;
+    }
+
+    .panel-title span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-title svg {
+      color: var(--primary);
+    }
+
+    /* Selector de Canales CCTV */
+    .camera-selector {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+
+    .cam-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-color);
+      color: var(--text-muted);
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: var(--font-main);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .cam-btn:hover {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .cam-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    /* Contenedor Feed CCTV */
+    .cctv-container {
+      position: relative;
+      width: 100%;
+      height: 250px;
+      background-color: #050608;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .cctv-image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.9;
+      transition: filter 0.3s ease;
+    }
+
+    /* Overlay de Análisis Técnico */
+    .ai-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    .scanline {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-blue);
+      box-shadow: 0 0 8px var(--accent-blue);
+      animation: scan 2.5s linear infinite;
+      display: none;
+    }
+
+    @keyframes scan {
+      0% { top: 0%; }
+      50% { top: 100%; }
+      100% { top: 0%; }
+    }
+
+    /* Cuadros de Detección (Estilo Industrial) */
+    .bounding-box {
+      position: absolute;
+      border: 2px solid var(--accent-red);
+      background-color: rgba(239, 68, 68, 0.12);
+      box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.15);
+      border-radius: 2px;
+      display: none;
+      transition: all 0.3s ease;
+    }
+
+    .bounding-box.congestion {
+      border-color: var(--accent-yellow);
+      background-color: rgba(245, 158, 11, 0.12);
+      box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.15);
+    }
+
+    .box-label {
+      position: absolute;
+      top: 0;
+      left: 0;
+      background-color: var(--accent-red);
+      color: white;
+      font-size: 0.65rem;
+      font-weight: 600;
+      font-family: var(--font-mono);
+      padding: 2px 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .bounding-box.congestion .box-label {
+      background-color: var(--accent-yellow);
+      color: #000;
+    }
+
+    .cctv-overlay-text {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--accent-green);
+      background: rgba(10, 11, 16, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
+      top: 12px;
+      left: 12px;
+      letter-spacing: 0.5px;
+    }
+
+    .cctv-overlay-rec {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: white;
+      background: rgba(10, 11, 16, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+
+    .rec-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-red);
+      border-radius: 50%;
+      animation: blink 1s infinite alternate;
+    }
+
+    @keyframes blink {
+      0% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+
+    /* Terminal de Eventos de Telemetría */
+    .ai-logs {
+      margin-top: 16px;
+      background: #06070a;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 14px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      height: 140px;
+      overflow-y: auto;
+      color: #9299a8;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+      line-height: 1.6;
+    }
+
+    .log-line {
+      margin-bottom: 6px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.01);
+      padding-bottom: 2px;
+    }
+
+    .log-line.system { color: var(--accent-blue); }
+    .log-line.success { color: var(--accent-green); }
+    .log-line.warning { color: var(--accent-yellow); }
+    .log-line.danger { color: var(--accent-red); }
+
+    /* Editor de Código DSL */
+    .editor-container {
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      position: relative;
+    }
+
+    .dsl-editor {
+      width: 100%;
+      flex-grow: 1;
+      height: 230px;
+      background: #06070a;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 16px;
+      color: #e5e7eb;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      resize: none;
+      line-height: 1.6;
+      outline: none;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
+      transition: border-color 0.3s ease;
+    }
+
+    .dsl-editor:focus {
+      border-color: rgba(79, 70, 229, 0.4);
+    }
+
+    .editor-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 12px;
+      gap: 10px;
+    }
+
+    .btn {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 6px;
+      font-family: var(--font-main);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background-color 0.2s, transform 0.1s;
+      box-shadow: 0 4px 12px var(--primary-glow);
+    }
+
+    .btn:hover {
+      background-color: var(--primary-hover);
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      box-shadow: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* Visualizador del AST (Esquema Profesional Minimalista) */
+    .ast-viewer {
+      background: #06070a;
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      overflow: auto;
+      max-height: 442px;
+      flex-grow: 1;
+      box-shadow: inset 0 2px 8px rgba(0,0,0,0.8);
+    }
+
+    .ast-node {
+      margin-left: 14px;
+      border-left: 1px dashed rgba(255, 255, 255, 0.08);
+      padding-left: 12px;
+      margin-top: 5px;
+    }
+
+    .ast-node-header {
+      font-weight: 600;
+      color: #818cf8;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.8rem;
+      padding: 2px 0;
+    }
+
+    .ast-node-header::before {
+      content: '⏷';
+      font-size: 0.55rem;
+      color: var(--text-muted);
+      transition: transform 0.2s;
+    }
+
+    .ast-node.collapsed > .ast-node-body {
+      display: none;
+    }
+
+    .ast-node.collapsed > .ast-node-header::before {
+      transform: rotate(-90deg);
+    }
+
+    .ast-key {
+      color: var(--text-muted);
+    }
+
+    .ast-val-str {
+      color: var(--accent-green);
+    }
+
+    .ast-val-num {
+      color: var(--accent-yellow);
+    }
+
+    .ast-val-bool {
+      color: #fb923c;
+    }
+
+    /* Consola de Compilación / Errores */
+    .compiler-output {
+      margin-top: 12px;
+      padding: 12px 16px;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.4;
+      display: none;
+    }
+
+    .compiler-output.success {
+      display: block;
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.2);
+      color: #34d399;
+    }
+
+    .compiler-output.error {
+      display: block;
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #f87171;
+    }
+
+    /* Fila Inferior: Actuadores Físicos y Señalización */
+    .dispatch-container {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 8px;
+    }
+
+    .dispatch-card {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 10px;
+      padding: 18px;
+    }
+
+    .dispatch-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .dispatch-title svg {
+      flex-shrink: 0;
+    }
+
+    /* Sistema de Sirenas de Alerta (Estilo Industrial) */
+    .sirens-grid {
+      display: flex;
+      gap: 12px;
+    }
+
+    .siren-unit {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 8px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      opacity: 0.25;
+      transition: all 0.4s ease;
+    }
+
+    .siren-unit.active {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.03);
+      border-color: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .siren-light {
+      width: 28px;
+      height: 28px;
+      background-color: #27272a;
+      border-radius: 4px;
+      position: relative;
+      transition: all 0.3s ease;
+    }
+
+    /* Efecto Industrial de Baliza Activa */
+    .siren-unit.active[data-type="policia"] .siren-light {
+      background-color: var(--accent-blue);
+      box-shadow: 0 0 25px var(--accent-blue);
+      animation: flash-blue 0.4s infinite alternate;
+    }
+
+    .siren-unit.active[data-type="ambulancia"] .siren-light {
+      background-color: var(--accent-red);
+      box-shadow: 0 0 25px var(--accent-red);
+      animation: flash-red 0.4s infinite alternate;
+    }
+
+    .siren-unit.active[data-type="bomberos"] .siren-light {
+      background-color: var(--accent-yellow);
+      box-shadow: 0 0 25px var(--accent-yellow);
+      animation: flash-orange 0.5s infinite alternate;
+    }
+
+    @keyframes flash-blue {
+      0% { background-color: #1e3a8a; box-shadow: 0 0 5px rgba(59, 130, 246, 0.2); }
+      100% { background-color: var(--accent-blue); box-shadow: 0 0 30px var(--accent-blue); }
+    }
+
+    @keyframes flash-red {
+      0% { background-color: #7f1d1d; box-shadow: 0 0 5px rgba(239, 68, 68, 0.2); }
+      100% { background-color: var(--accent-red); box-shadow: 0 0 30px var(--accent-red); }
+    }
+
+    @keyframes flash-orange {
+      0% { background-color: #78350f; box-shadow: 0 0 5px rgba(245, 158, 11, 0.2); }
+      100% { background-color: var(--accent-yellow); box-shadow: 0 0 30px var(--accent-yellow); }
+    }
+
+    .siren-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+    }
+
+    .siren-unit.active .siren-label {
+      color: var(--text-main);
+    }
+
+    /* Cartel LED Vial */
+    .led-sign {
+      width: 100%;
+      background: #020203;
+      border: 4px solid #1f2937;
+      border-radius: 6px;
+      padding: 16px;
+      font-family: var(--font-mono);
+      min-height: 85px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 0 15px rgba(0, 0, 0, 0.95);
+      position: relative;
+    }
+
+    .led-grid {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255,255,255,0.01) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.01) 1px, transparent 1px);
+      background-size: 2px 2px;
+      pointer-events: none;
+    }
+
+    .led-text {
+      color: #f97316;
+      font-size: 1.25rem;
+      font-weight: 700;
+      text-shadow: 0 0 6px #ea580c;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      text-align: center;
+      line-height: 1.4;
+    }
+
+    .led-text.empty {
+      color: #431407;
+      text-shadow: none;
+      opacity: 0.35;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado Profesional -->
+  <header>
+    <div class="logo-container">
+      <div class="logo-badge">COV-PGB</div>
+      <div>
+        <h1>MONITOREO VIAL - PUENTE GENERAL BELGRANO</h1>
+        <div class="subtitle">Consola de Operaciones - Integración de Telemetría de IA y Procesamiento de Lenguaje DSL</div>
+      </div>
+    </div>
+    <div class="header-metadata">
+      ESTADO: <strong>OPERACIONAL</strong><br>
+      SISTEMA: <strong>VÍA PÚBLICA INTEGRADA</strong>
+    </div>
+  </header>
+
+  <div class="grid-container">
+    
+    <!-- COLUMNA IZQUIERDA: CÁMARAS Y TELEMETRÍA -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          CÁMARAS EN VIVO - PUENTE GENERAL BELGRANO
+        </span>
+        <span style="font-size: 0.7rem; color: var(--accent-green); background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); padding: 2px 8px; border-radius: 4px; font-weight: 600;">EN VIVO</span>
+      </div>
+      
+      <div class="camera-selector">
+        <button class="cam-btn active" onclick="seleccionarCamara(1)">CANAL 01: PUENTE SUR</button>
+        <button class="cam-btn" onclick="seleccionarCamara(2)">CANAL 02: ACCESO CORR.</button>
+        <button class="cam-btn" onclick="seleccionarCamara(3)">CANAL 03: PUENTE NORTE</button>
+      </div>
+
+      <div class="cctv-container">
+        <img id="cctvImage" class="cctv-image" src="assets/puente_sur_accidente.png" alt="CCTV Feed">
+        <div class="cctv-overlay-text" id="cctvLabel">CAM_PUENTE_SUR_01</div>
+        <div class="cctv-overlay-rec"><div class="rec-dot"></div>REC</div>
+        
+        <div class="ai-overlay">
+          <div class="scanline" id="scanline"></div>
+          <!-- Bounding box industrial -->
+          <div class="bounding-box" id="aiBoundingBox">
+            <span class="box-label" id="aiBoxLabel">ACCIDENTE: 96%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel-title" style="margin-top: 24px;">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="7" y2="7"></line><line x1="2" y1="17" x2="7" y2="17"></line><line x1="17" y1="17" x2="22" y2="17"></line><line x1="17" y1="7" x2="22" y2="7"></line></svg>
+          TELEMETRÍA DE INCIDENTES - LOG DE EVENTOS
+        </span>
+      </div>
+      <div class="ai-logs" id="aiLogs">
+        <!-- Logs dinámicos -->
+      </div>
+    </div>
+
+    <!-- COLUMNA DERECHA: DSL Y AST -->
+    <div class="panel">
+      <div class="panel-title">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          ESPECIFICACIÓN FORMAL (CÓDIGO DSL)
+        </span>
+      </div>
+      
+      <div class="editor-container">
+        <textarea class="dsl-editor" id="dslEditor" spellcheck="false">// Inicializando intérprete...</textarea>
+        
+        <div class="compiler-output" id="compilerOutput"></div>
+        
+        <div class="editor-actions">
+          <button class="btn" onclick="compilarCodigo()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+            Compilar y Despachar
+          </button>
+          <button class="btn btn-secondary" onclick="restablecerCodigo()">Restablecer Código</button>
+        </div>
+      </div>
+      
+      <div class="panel-title" style="margin-top: 24px;">
+        <span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          ÁRBOL DE SINTAXIS ABSTRACTA (AST)
+        </span>
+      </div>
+      <div class="ast-viewer" id="astViewer">
+        <!-- Render del AST interactivo -->
+      </div>
+    </div>
+
+    <!-- FILA INFERIOR: RESPUESTAS Y DISPOSITIVOS FÍSICOS -->
+    <div class="dispatch-container">
+      
+      <!-- DESPACHO DE SERVICIOS -->
+      <div class="panel dispatch-card">
+        <div class="dispatch-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+          DESPACHO DE UNIDADES DE EMERGENCIA (ACTUADORES)
+        </div>
+        <div class="sirens-grid">
+          <div class="siren-unit" data-type="policia" id="sirenPolicia">
+            <div class="siren-light"></div>
+            <div class="siren-label">Policía / Gend.</div>
+          </div>
+          <div class="siren-unit" data-type="ambulancia" id="sirenAmbulancia">
+            <div class="siren-light"></div>
+            <div class="siren-label">Ambulancia</div>
+          </div>
+          <div class="siren-unit" data-type="bomberos" id="sirenBomberos">
+            <div class="siren-light"></div>
+            <div class="siren-label">Bomberos</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEÑALIZACIÓN LED VIAL -->
+      <div class="panel dispatch-card">
+        <div class="dispatch-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="9" x2="15" y2="15"></line><line x1="15" y1="9" x2="9" y2="15"></line></svg>
+          SEÑALIZACIÓN LED - MENSAJERÍA VARIABLE VIAL
+        </div>
+        <div class="led-sign">
+          <div class="led-grid"></div>
+          <div class="led-text empty" id="ledDisplay">SISTEMA OPERATIVO - SIN ALERTAS</div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- Carga del Intérprete y Controlador (Código Limpio y Separado de la Vista) -->
+  <script src="src/dashboard/configuracion.js"></script>
+  <script src="src/dashboard/compiler.js"></script>
+  <script src="src/dashboard/app.js"></script>
+</body>
+</html>

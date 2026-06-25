@@ -1,0 +1,3 @@
+abrir consola (dependencias instaladas)
+npx tsx src/probarLexer.ts
+npx tsx src/probarParser.ts
