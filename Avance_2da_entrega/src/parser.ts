@@ -116,8 +116,8 @@ export class Parser {
   private listaAcciones(): void {
     this.consumir('ACCION_RECOMENDADA')
 
-    while (this.actual().tipo === 'Y') {
-      this.consumir('Y')
+    while (this.actual().tipo === 'COMA') {
+      this.consumir('COMA')
       this.consumir('ACCION_RECOMENDADA')
     }
   }
@@ -125,8 +125,8 @@ export class Parser {
   private listaAlertas(): void {
     this.alertaRespuesta()
 
-    while (this.actual().tipo === 'Y') {
-      this.consumir('Y')
+    while (this.actual().tipo === 'COMA') {
+      this.consumir('COMA')
       this.alertaRespuesta()
     }
   }

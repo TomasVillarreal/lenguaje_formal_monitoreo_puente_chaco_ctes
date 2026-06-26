@@ -4,11 +4,5 @@ cd entrega_final
 Instalar dependencias (si no se han instalado):
 npm install
 
-Probar los Casos de Prueba del Lexer:
-npx tsx src/probarCasosLexer.ts
-
-Probar los Casos de Prueba del Parser:
-npx tsx src/probarCasosParser.ts
-
-Probar los Casos de Prueba de IA y Actuadores:
-npx tsx src/probarCasosIA.ts
+Probar todos los Casos de Prueba (1 al 12):
+npx tsx src/probarCasos.ts

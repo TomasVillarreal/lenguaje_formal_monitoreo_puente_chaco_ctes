@@ -5,7 +5,6 @@ export type TokenType =
   | 'EN'
   | 'PRIORIDAD'
   | 'ACCION'
-  | 'Y'
   | 'LLAVE_ABRE'
   | 'LLAVE_CIERRA'
   | 'DOS_PUNTOS'
@@ -33,7 +32,6 @@ const palabrasReservadas: Record<string, TokenType> = {
   EN: 'EN',
   PRIORIDAD: 'PRIORIDAD',
   ACCION: 'ACCION',
-  Y: 'Y',
 }
 
 const tiposIncidente = [
