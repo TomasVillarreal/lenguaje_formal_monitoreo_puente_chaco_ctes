@@ -1,11 +1,9 @@
+import * as fs from 'fs'
+import * as path from 'path'
+
 import { 
   Token, 
   TokenType,
-  tiposIncidente,
-  ubicaciones,
-  prioridades,
-  notificaciones,
-  acciones 
 } from './lexer'
 
 import {
@@ -15,6 +13,23 @@ import {
   ReporteAlertaNode,
   RespuestaNode
 } from './ast'
+
+// Cargar la configuracion desde el archivo JSON
+const configPath = path.resolve(__dirname, '../configuracion.json')
+let config: any = {}
+
+try {
+  const fileContent = fs.readFileSync(configPath, 'utf-8')
+  config = JSON.parse(fileContent)
+} catch (error) {
+  console.error('Error al cargar configuracion.json desde el Lexer:', (error as Error).message)
+}
+
+export const tiposIncidente: string[] = config.tiposIncidente || []
+export const ubicaciones: string[] = config.ubicaciones || []
+export const prioridades: string[] = config.prioridades || []
+export const notificaciones: string[] = config.notificaciones || []
+export const acciones: string[] = config.acciones || []
 
 /**
  * Clase Parser (Analizador sintáctico).
