@@ -176,6 +176,21 @@ function compilarCodigo() {
 
   try {
     const tokens = window.runLexer(codigo);
+
+    const erroresLexicos = tokens.filter(t => t.tipo === 'ERROR');
+
+    if (erroresLexicos.length > 0) {
+        let mensaje = "Errores léxicos:\n";
+
+        erroresLexicos.forEach(e => {
+            mensaje +=
+                `Línea ${e.linea}, columna ${e.columna}: ` +
+                `carácter '${e.valor}' no válido.\n`;
+        });
+
+        throw new Error(mensaje);
+    }
+
     const parser = new window.BrowserParser(tokens);
     const ast = parser.analizar();
 
